@@ -103,6 +103,10 @@ if (__DEV__) {
 function executeDispatch(event, simulated, listener, inst) {
   var type = event.type || 'unknown-event';
   event.currentTarget = EventPluginUtils.getNodeFromInstance(inst);
+  if(typeof listener == 'object' && typeof listener.handleEvent == 'function'){
+    var handler = listener;
+    listener = function(a, b){ return handler.handleEvent(a, b) };
+  }
   if (simulated) {
     ReactErrorUtils.invokeGuardedCallbackWithCatch(
       type,

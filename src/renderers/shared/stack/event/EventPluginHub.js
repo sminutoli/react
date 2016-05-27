@@ -103,11 +103,20 @@ var EventPluginHub = {
    * @param {function} listener The callback to store.
    */
   putListener: function(inst, registrationName, listener) {
-    invariant(
-      typeof listener === 'function',
-      'Expected %s listener to be a function, instead got type %s',
-      registrationName, typeof listener
-    );
+    
+    try {
+      invariant(
+        typeof listener === 'function',
+        'Expected %s listener to be a function, instead got type %s',
+        registrationName, typeof listener
+      );
+    }catch(err){
+      invariant(
+        typeof listener === 'object' && typeof listener.handleEvent === 'function',
+        'Expected %s listener to implement EventInterface, must implement handleEvent',
+        registrationName, typeof listener.handleEvent
+      );
+    }
 
     var bankForRegistrationName =
       listenerBank[registrationName] || (listenerBank[registrationName] = {});
